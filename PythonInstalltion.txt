@@ -1,0 +1,6 @@
+今日安装numpy。
+下载最新版的ananconda之后
+打开Prompt命令提示符
+使用 conda create -n ENV_Name python = 3.6 命令新建3.6版本的python环境
+之后 conda activate ENV_Name 激活命令
+最后 稍等片刻在弹出列表中下载所需环境
