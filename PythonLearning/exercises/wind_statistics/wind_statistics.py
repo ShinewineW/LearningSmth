@@ -71,5 +71,55 @@ These data were analyzed in detail in the following article:
 See :ref:`wind-statistics-solution`.
 """
 
+
+
 from numpy import loadtxt
+import numpy as np
+
+
+#1. Solution 1. load data
+data = loadtxt('C:/Users/Administrator/Desktop/MyGit/LearningSmth/PythonLearning/exercises/wind_statistics/wind.data')
+print(data.shape)
+
+
+#2.Soluton2. 计算整个数据集中风速的最大，最小，平均值和标准差
+data_2 = data[:,3::]
+print(data_2.shape)
+
+#计算最大值
+print("The WindSpeed Max Value:" + str(np.max(data_2)))
+print("The WindSpeed Min Value:" + str(np.min(data_2)))
+print("The WindSpeed Mean Value:" + str(np.mean(data_2)))
+print("The WindSpeed standard deviation Value:" + str(np.std(data_2)))
+
+#3.Solution3. 计算每个地方全时间范围内的最大最小平均标准差
+#但是直接用指定轴就不用使用for循环了，如Solution4的方法
+for i in range(3,13,1):
+    data_3 = data[:,i]
+    print("The  " + str(i) +" th location Windspeed situation:")
+    print("The WindSpeed Max Value:" + str(np.max(data_3)))
+    print("The WindSpeed Min Value:" + str(np.min(data_3)))
+    print("The WindSpeed Mean Value:" + str(np.mean(data_3)))
+    print("The WindSpeed standard deviation Value:" + str(np.std(data_3)))
+    
+    
+    
+#4.Solution4.计算所有地方每一天的风速情况
+print(data_2.max(axis=-1).shape)
+print(data_2.min(axis=-1).shape)
+print(data_2.mean(axis=-1).shape)
+print(data_2.std(axis=-1).shape)
+
+#5.Solution5.计算所有地方每一天的风速最大存在地点
+data_5 = data_2.argmax(axis=-1) + 3
+print(data_5.shape)
+
+#6.Solution6. 找到最大风速存在地点的年月日
+#print(data_2.argmax()//12)
+#print(np[(data_2.argmax()//12)::,0:3:1])
+
+
+
+
+
 
