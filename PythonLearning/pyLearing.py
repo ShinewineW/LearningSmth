@@ -75,7 +75,9 @@ mask = a%3 == 0 #获得所有能被三整除数字的掩码
 output[mask] = a[mask] #将mask中的位置与新建的output一一对应
 print(output)
 #但是这个方法相对原始，可以直接使用np.where功能
-print(np.where(a%3 == 0,a,np.nan)) #arg1 条件 arg2 满足条件的为多少 arg3不满足条件的为多少
+test = np.where(a%3 == 0,a,np.nan)
+
+print(b.flags.owndata) #arg1 条件 arg2 满足条件的为多少 arg3不满足条件的为多少
 
 #%%
 #5.多维数组
