@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Nov 18 16:39:20 2020
-
+Written by Netfather
+This document is guided by Dr.Wu DeepLearning Course C1_W2_Homework_Part1
 @author: Administrator
 """
 
@@ -75,11 +76,53 @@ def normalizeRows(x):
 
 #%% [7]
 #6. 对于单个逻辑回归，使用sigmoid函数就够了，
-#但是如果
+#但是如果对于多个物体的分类，使用Sigmoid函数就不恰当，这时候需要使用
+#softmax函数来对所有待分类物体进行分类概率预测，而不是简单的逻辑回归
+
+
+def softmax(x):
     
+    e_x  = np.exp(x)
+   # e_x_sum = e_x.sum(axis = -1).reshape(-1,1)
+   #或者使用Keepdimions参数来保证参数
+    e_x_sum = e_x.sum(axis = -1,keepdims = True)
+    s = e_x / e_x_sum
     
+    return s
+
+print ("Test SoftMax Function")
+x = np.array([
+    [9, 2, 5, 0, 0],
+    [7, 5, 0, 0 ,0]])
+print("softmax(x) = " + str(softmax(x)))
     
+#%% [8]
+#7. 实现L1损失函数
+
+#Graded Function L1
+
+def L1(yhat,y):
+    #yhat 为正向传播之后的值
+    #y 为实际的值
     
+    loss1 = np.sum(np.abs(yhat - y))
+    return loss1
+
+#8. 实现L2损失函数
+
+#Granded Loss Function L2
+
+def L2(yhat,y):
+    
+    y_temp = np.abs(yhat-y)
+    loss2 = np.dot(y_temp,y_temp.T)
+    
+    return loss2
+
+# Until this The Dr.Wu DeepLearning Course C1_W2_HomeWork_Part1 is finished
+# See the document C1_W2_Homework_Part2.py    
+
+
     
     
     
