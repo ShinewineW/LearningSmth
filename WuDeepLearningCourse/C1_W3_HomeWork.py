@@ -204,9 +204,183 @@ def compute_cost(A_Output, Y, parameters):
 # print("cost = " + str(compute_cost(A2, Y_assess, parameters)))
     
 #5.反向传播计算
+def backward_propagation(parameters, cache, X, Y):
+    """
+    Implement the backward propagation using the instructions above.
+    
+    Arguments:
+    parameters -- python dictionary containing our parameters 
+    cache -- a dictionary containing "Z1", "A1", "Z2" and "A2".
+    X -- input data of shape (2, number of examples)
+    Y -- "true" labels vector of shape (1, number of examples)
+    
+    Returns:
+    grads -- python dictionary containing your gradients with respect to different parameters
+    """
+    train_number = X.shape[-1]
+    
+    Z_Hidden = cache["Z_Hidden"]
+    A_Hidden = cache["A_Hidden"]
+    Z_Output = cache["Z_Output"]
+    A_Output = cache["A_Output"]
+    
+    W1 = parameters["W1"]
+    W2 = parameters["W2"]
+    
+    
+    #计算反向传播的通理论，反向Z的结果是直接在矩阵上运算
+    #然后具体到参数上来，再来计算1/m应该放在哪里
+    dZ_Output = A_Output - Y
+    
+    dW2 = np.dot(dZ_Output,A_Hidden.T)/train_number
+    db2 = np.mean(dZ_Output,axis = -1,keepdims= True)
+    
+    #下面注释的两行使用的是Relu激活函数
+    # dZ_Temp =  np.dot(W2.T,dZ_Output)
+    # dZ_Hidden = np.where(Z_Hidden > 0,dZ_Temp,0)
+    dZ_Hidden = np.dot(W2.T,dZ_Output) * (1-np.power(A_Hidden,2))   #和Z_Hidden的矩阵维度一致 (4*m)
+    dW1 = np.dot(dZ_Hidden,X.T)/train_number
+    db1 = np.mean(dZ_Hidden,axis = -1,keepdims= True)
+    
+    grads = {"dW1": dW1,
+            "db1": db1,
+            "dW2": dW2,
+            "db2": db2}
+    
+    return grads
+ 
+#Test   
+# parameters, cache, X_assess, Y_assess = backward_propagation_test_case()
+
+# grads = backward_propagation(parameters, cache, X_assess, Y_assess)
+# print ("dW1 = "+ str(grads["dW1"]))
+# print ("db1 = "+ str(grads["db1"]))
+# print ("dW2 = "+ str(grads["dW2"]))
+# print ("db2 = "+ str(grads["db2"]))   
+
+#6. 参数更新
+def update_parameters(parameters, grads, learning_rate = 1.2):
+    """
+    Updates parameters using the gradient descent update rule given above
+    
+    Arguments:
+    parameters -- python dictionary containing your parameters 
+    grads -- python dictionary containing your gradients 
+    
+    Returns:
+    parameters -- python dictionary containing your updated parameters 
+    """
+    # Retrieve each parameter from the dictionary "parameters"
+       
+    parameters["W1"] -= learning_rate * grads["dW1"]
+    parameters["b1"] -= learning_rate * grads["db1"]
+    parameters["W2"] -= learning_rate * grads["dW2"]
+    parameters["b2"] -= learning_rate * grads["db2"]
+     
+    return parameters
+
+#Test
+# parameters, grads = update_parameters_test_case()
+# parameters = update_parameters(parameters, grads)
+
+# print("W1 = " + str(parameters["W1"]))
+# print("b1 = " + str(parameters["b1"]))
+# print("W2 = " + str(parameters["W2"]))
+# print("b2 = " + str(parameters["b2"]))
+
+#%% 将上述建立的前向传播，损失计算，反向传播，梯度更新整合在一起
+def nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False):
+    """
+    Arguments:
+    X -- dataset of shape (2, number of examples)
+    Y -- labels of shape (1, number of examples)
+    n_h -- size of the hidden layer
+    num_iterations -- Number of iterations in gradient descent loop
+    print_cost -- if True, print the cost every 1000 iterations
+    
+    Returns:
+    parameters -- parameters learnt by the model. They can then be used to predict.
+    """
+    
+    np.random.seed(3)
+    n_x = layer_sizes(X, Y)[0]
+    n_y = layer_sizes(X, Y)[2]
+    
+    parameters = initialize_parameters(n_x,n_h,n_y)
+    
+    
+    for i in range(num_iterations):
+        
+        A_Output,cache = forward_propagation(X,parameters)
+        
+        
+        J_Cost = compute_cost(A_Output,Y,parameters)
+        
+        grads = backward_propagation(parameters, cache, X, Y)
+        
+        parameters = update_parameters(parameters, grads)
+        
+        if i % 1000:
+            if print_cost :
+                print ("Cost after iteration %i: %f" %(i, J_Cost))
+        
+    return parameters
+
+# X_assess, Y_assess = nn_model_test_case()
+
+# parameters = nn_model(X_assess, Y_assess, 4, num_iterations=10000, print_cost=False)
+# print("W1 = " + str(parameters["W1"]))
+# print("b1 = " + str(parameters["b1"]))
+# print("W2 = " + str(parameters["W2"]))
+# print("b2 = " + str(parameters["b2"]))  
+
+#%%预测函数 使用训练完成的参数进行预测
+def predict(parameters, X):
+    """
+    Using the learned parameters, predicts a class for each example in X
+    
+    Arguments:
+    parameters -- python dictionary containing your parameters 
+    X -- input data of size (n_x, m)
+    
+    Returns
+    predictions -- vector of predictions of our model (red: 0 / blue: 1)
+    """
+    
+    # Computes probabilities using forward propagation, and classifies to 0/1 using 0.5 as the threshold.
+  ### START CODE HERE ### (≈ 2 lines of code)
+    A2, cache = forward_propagation(X, parameters)
+    predictions = np.round(A2)
+    ### END CODE HERE ###
+    
+    return predictions    
+
+#%%在搭建好的模型上运行最终的结果
+# Build a model with a n_h-dimensional hidden layer
+# parameters = nn_model(X, Y, n_h = 4, num_iterations = 10000, print_cost=True)
+
+# # Plot the decision boundary
+# plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
+# plt.title("Decision Boundary for hidden layer size " + str(4))
 
 
+#%%可选练习
+#1. 调整隐藏层大小
+plt.figure(figsize = (16,32),dpi = 80)
+hidden_layer_sizes = [1, 2, 3, 4, 5, 10, 20]
+for i, n_h in enumerate(hidden_layer_sizes):
+    plt.subplot(5, 2, i+1)
+    plt.title('Hidden Layer of size %d' % n_h)
+    parameters = nn_model(X, Y, n_h, num_iterations = 5000)
+    plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
+    predictions = predict(parameters, X)
+    accuracy = float((np.dot(Y,predictions.T) + np.dot(1-Y,1-predictions.T))/float(Y.size)*100)
+    print ("Accuracy for {} hidden units: {} %".format(n_h, accuracy))
+    
 
+    
+
+        
 
 
 
