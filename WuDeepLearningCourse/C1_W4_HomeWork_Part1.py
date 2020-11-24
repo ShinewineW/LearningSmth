@@ -114,11 +114,7 @@ def linear_forward(A, W, b):
     assert(W.shape[-1] == A.shape[0])
     assert(Z.shape == (W.shape[0], A.shape[1]))
     
-    cache = {
-        "W" : W,
-        "b" : b,
-        "A" : A
-        }
+    cache = (A, W, b)
     return Z,cache
 
 #Test 前向线性模块
@@ -184,8 +180,8 @@ def L_model_forward(X, parameters):
                 every cache of linear_relu_forward() (there are L-1 of them, indexed from 0 to L-2)
                 the cache of linear_sigmoid_forward() (there is one, indexed L-1)
     """
-    #这里的caches中保存的是字典！！！
-    #所以返回值是一个包含字典的 字典组
+    #这里的caches中保存的是元组！！！
+    #所以返回值是一个包含元组的列表
     caches = []
     L = len(parameters)//2
     temp_prev = X
