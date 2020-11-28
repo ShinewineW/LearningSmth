@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 27 15:06:31 2020
-
+@Discription: 本Part2作业详细阐述了使用不同的正则化方法来使得结果更具有非线性，使得结果在最终Test模型上取得最好效果
 @author: Administrator
 """
 
@@ -201,6 +201,153 @@ def backward_propagation_with_regularization(X, Y, cache, lambd):
 #首先完成关于droupout的正向传播代码
 #对于droupout我们应该清楚对于每一个隐藏层，我们都有一个keepprob参数，这个参数
 #指导着这一层某个神经元的关闭或开启，在每次迭代中都有随机神经元关闭或开启
+
+def forward_propagation_with_dropout(X, parameters, keep_prob = 0.5):
+    """
+    Implements the forward propagation: LINEAR -> RELU + DROPOUT -> LINEAR -> RELU + DROPOUT -> LINEAR -> SIGMOID.
+    
+    Arguments:
+    X -- input dataset, of shape (2, number of examples)
+    parameters -- python dictionary containing your parameters "W1", "b1", "W2", "b2", "W3", "b3":
+                    W1 -- weight matrix of shape (20, 2)
+                    b1 -- bias vector of shape (20, 1)
+                    W2 -- weight matrix of shape (3, 20)
+                    b2 -- bias vector of shape (3, 1)
+                    W3 -- weight matrix of shape (1, 3)
+                    b3 -- bias vector of shape (1, 1)
+    keep_prob - probability of keeping a neuron active during drop-out, scalar
+    
+    Returns:
+    A3 -- last activation value, output of the forward propagation, of shape (1,1)
+    cache -- tuple, information stored for computing the backward propagation
+    """
+    
+    np.random.seed(1)
+    
+    # retrieve parameters
+    W1 = parameters["W1"]
+    b1 = parameters["b1"]
+    W2 = parameters["W2"]
+    b2 = parameters["b2"]
+    W3 = parameters["W3"]
+    b3 = parameters["b3"]
+    
+    # LINEAR -> RELU -> LINEAR -> RELU -> LINEAR -> SIGMOID
+    Z1 = np.dot(W1,X) + b1
+    A1 = relu(Z1)
+    #第一层神经元的结果
+    #此时使用droupout技术关闭部分神经元
+    Mask1 = np.random.rand(A1.shape[0],A1.shape[1])
+    Mask1 = Mask1 < keep_prob #得到矩阵A1对应的掩码
+    A1 = A1 * Mask1 #直接进行一个矩阵的相乘
+    A1 = A1 / keep_prob #反向droupout中非常关键的一步，这里就可以保证输出的期望和原来相比是不变的
+    
+    #第二层神经元
+    Z2 = np.dot(W2, A1) + b2
+    A2 = relu(Z2)
+    #此时使用dropout技术关闭部分神经元
+    Mask2 = np.random.rand(A2.shape[0],A2.shape[1])
+    Mask2 = Mask2 < keep_prob
+    A2 = A2 * Mask2
+    A2 = A2 / keep_prob
+    
+    #最终输出
+    Z3 = np.dot(W3, A2) + b3
+    A3 = sigmoid(Z3)
+
+    cache = (Z1, Mask1, A1, W1, b1, Z2, Mask2, A2, W2, b2, Z3, A3, W3, b3)
+
+    return A3, cache
+
+# X_assess, parameters = forward_propagation_with_dropout_test_case()
+
+# A3, cache = forward_propagation_with_dropout(X_assess, parameters, keep_prob = 0.7)
+# print ("A3 = " + str(A3))
+#Test OK!前向传播的dropout技术已经完成
+
+#如下代码实现dropout技术的反向传播
+#通过cache中的掩码mask可以很方便的将不需要的项归0，但是为了保证二者期望一致，同样需要在输出上/keep_prob
+
+def backward_propagation_with_dropout(X, Y, cache, keep_prob):
+    """
+    Implements the backward propagation of our baseline model to which we added dropout.
+    
+    Arguments:
+
+    X -- input dataset, of shape (2, number of examples)
+    Y -- "true" labels vector, of shape (output size, number of examples)
+    cache -- cache output from forward_propagation_with_dropout()
+    keep_prob - probability of keeping a neuron active during drop-out, scalar
+    
+    Returns:
+    gradients -- A dictionary with the gradients with respect to each parameter, activation and pre-activation variables
+    """
+    
+    #由于整个函数在一开始就变了 因此需要重新写反向传播的梯度
+    gradients = {}
+    train_number = X.shape[-1]
+    Z1, Mask1, A1, W1, b1, Z2, Mask2, A2, W2, b2, Z3, A3, W3, b3 = cache
+    
+    dZ3 = A3 - Y
+    dW3 = np.dot(dZ3,A2.T) / train_number
+    db3 = np.mean(dZ3,axis = -1,keepdims= True)
+    
+    #第二层
+    dA2 = np.dot(W3.T,dZ3) * Mask2/ keep_prob
+    temp_mask = A2 > 0
+    dZ2 = temp_mask * dA2
+    # dZ2 = np.multiply(dA2, np.int64(A2 > 0))
+    #考虑keep_prob的问题
+    dW2 = np.dot(dZ2,A1.T)  / train_number 
+    db2 = np.mean(dZ2,axis = -1,keepdims= True)
+    
+    #第一层
+    dA1 = np.dot(W2.T,dZ2) * Mask1 / keep_prob
+    # dZ1 = np.multiply(dA1, np.int64(A1 > 0))
+    temp_mask = A1 > 0
+    dZ1 = temp_mask * dA1
+    #考虑keep_prob的问题
+    dW1 =  np.dot(dZ1,X.T)  / train_number 
+    db1 = np.mean(dZ1,axis = -1,keepdims= True)
+    
+    gradients = {"dZ3": dZ3, "dW3": dW3, "db3": db3,"dA2": dA2,
+                 "dZ2": dZ2, "dW2": dW2, "db2": db2, "dA1": dA1, 
+                 "dZ1": dZ1, "dW1": dW1, "db1": db1}
+    
+    return gradients
+
+
+# X_assess, Y_assess, cache = backward_propagation_with_dropout_test_case()
+
+# gradients = backward_propagation_with_dropout(X_assess, Y_assess, cache, keep_prob = 0.8)
+
+# print ("dA1 = " + str(gradients["dA1"]))
+# print ("dA2 = " + str(gradients["dA2"]))
+#Test OK!
+
+# 现在让我们使用dropout（keep_prob = 0.86）运行模型。 这意味着在每次迭代中，你都以24％的概率关闭第1层和第2层的每个神经元。 
+
+parameters = model(train_X, train_Y, keep_prob = 0.86, learning_rate = 0.3)
+
+print ("On the train set:")
+predictions_train = predict(train_X, train_Y, parameters)
+print ("On the test set:")
+predictions_test = predict(test_X, test_Y, parameters)
+
+plt.title("Model with dropout")
+axes = plt.gca()
+axes.set_xlim([-0.75,0.40])
+axes.set_ylim([-0.75,0.65])
+plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
+
+
+#至此Part2完结 Dropout在这其中发挥了非常惊艳的效果，可以看到最终的结果决策边界非常的完美
+#tricky的点在于使用droupout我们只会在训练中使用，然后对于每一个mask之后 都 马上/keep_prob来保证结果期望的不变
+
+    
+
+    
+    
 
 
 
