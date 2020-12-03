@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Dec  1 16:16:52 2020
-
+@Discription: 按照numpy中一致的广播规则进行广播
+注意到tensorflow和numpy一样，都是列优先原则，
+因此首先按照最后一列对齐，对齐之后往前看，维度不足的地方补1，只要有维度的地方是对齐的，那么就可以进行传播
 @author: Administrator
 """
 
