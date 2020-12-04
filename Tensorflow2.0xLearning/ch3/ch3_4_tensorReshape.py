@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Nov 28 16:29:40 2020
-
+@Discription:reshape操作
+tf.reshape:操作方式与numpy中的reshape一致，注意行列的判定
+tf.transpose:和reshape不同的地方在于，根本性的改变了维度的位置，例如行列变为列行
+tf.squeeze:将矩阵 中维度为1的维度删除，返回一个不含1的矩阵
+tf.expand_dims:扩展维度，将矩阵的维度扩展，
 @author: Administrator
 """
 
