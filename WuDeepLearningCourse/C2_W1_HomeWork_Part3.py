@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Nov 28 14:15:15 2020
-
+@Discription:这里实现了梯度检查部分代码
 @author: Administrator
 """
 

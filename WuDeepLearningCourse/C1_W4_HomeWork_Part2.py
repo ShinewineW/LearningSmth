@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Nov 25 12:51:57 2020
-
+@Discription: 这里构建了一个L层的深度神经网络，这是从最底层实现的深度神经网络
 @author: Administrator
 """
 import time
