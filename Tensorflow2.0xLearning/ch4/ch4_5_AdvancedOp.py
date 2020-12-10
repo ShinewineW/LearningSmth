@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Dec  4 17:38:10 2020
-
+@Discription:告诫操作
+tf.where:具体用法和np.where一模一样，一般用于特定条件下数据替换
+tf.scatter_nd:据indices中的下标，将updates中的值一一根据坐标赋值到shape中去
 @author: Administrator
 """
 

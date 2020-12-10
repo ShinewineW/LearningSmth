@@ -2,6 +2,8 @@
 """
 Created on Tue Dec  1 16:59:55 2020
 @Discription: 通过tensorflow2.0实现了一个对于Minist数据集的前向传播训练过程，
+同时还完成了test过程，每完成一个epoch就在test集上进行一次测试
+完成之后会输出两张plot 分别是loss和accuracy
 #其中还使用到了 He.etl的参数初始化方法
 #softmax 函数用于对多分类问题的loss函数
 #没有使用正则化
