@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Dec  4 17:13:45 2020
-
+@Discription: 本代码介绍tf中的限制幅度操作，一般为了避免出现梯度爆炸，我们会有两种
+不同的限幅操作
+tf.clip_by_value:对值的大小，按照max min来进行限幅
+tf.clip_by_norm:对输入的张量根据范数来进行限幅
 @author: Administrator
 """
 
