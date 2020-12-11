@@ -76,8 +76,23 @@ with tf.GradientTape() as tape:
 grads = tape.gradient(loss,[w,b])
 print(grads)
 
+#%% softmax梯度求导示例
+#一般默认把激活函数之前的叫做logits
+x = tf.random.normal([2,4])
+w = tf.random.normal([4,3])
+b = tf.zeros([3])
+y = tf.constant([2,0])
+w = tf.Variable(w)
+b = tf.Variable(b)
 
+with tf.GradientTape() as tape:
+    logits = x@w + b
+    loss = tf.reduce_mean(tf.losses.categorical_crossentropy(tf.one_hot(y,depth = 3),logits,from_logits = True))
 
+grads = tape.gradient(loss,[w,b])
+print(grads)
+
+#%% 单输出感知机及其梯度
 
 
 
