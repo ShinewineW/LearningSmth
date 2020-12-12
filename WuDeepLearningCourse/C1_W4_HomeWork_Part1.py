@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov 24 13:41:09 2020
-#构建一个任意深度的深度神经网络
+#构建一个任意深度的深度神经网络，这里实现的是网络的每个基础模块
+参数初始化，前线传播，损失计算，反向传播，参数更新 四个部分
 @author: Administrator
 """
 import numpy as np

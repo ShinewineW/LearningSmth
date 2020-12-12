@@ -9,6 +9,8 @@ Learnned from C1_W2_HomeWork
 2.将这个py文件所在目录加入到当前python的环境路径中
 3.挨个运行一边查看效果
 Enjoy!
+@Discription: 本文件实现了一个最简单的单层神经网络的实现。即直接将图片
+拍扁之后，将特征映射到输出为1的空间上
 @author: Administrator
 """
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec  3 16:15:08 2020
-@Description: 使用Tensorflow1.x
+@Description: 使用Tensorflow1.x来实现一个含有几层的深度神经网络
 @author: Administrator
 """
 

@@ -3,6 +3,7 @@
 Created on Wed Nov 18 16:39:20 2020
 Written by Netfather
 This document is guided by Dr.Wu DeepLearning Course C1_W2_Homework_Part1
+@Discription: 本文件实现了基本的深度学习激活函数，以及L1 L2距离的计算方法
 @author: Administrator
 """
 

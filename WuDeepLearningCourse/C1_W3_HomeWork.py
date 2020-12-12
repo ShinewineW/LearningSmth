@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 20 14:20:32 2020
+@Discription 本文件实现了一个含有单个隐藏层，隐藏神经元数为4的神经网络的构建
 
 @author: Administrator
 """
