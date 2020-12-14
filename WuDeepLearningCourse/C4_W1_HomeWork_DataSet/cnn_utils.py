@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.python.framework import ops
 
+
 def load_dataset():
-    train_dataset = h5py.File('train_signs.h5', "r")
+    train_dataset = h5py.File(r'C4_W1_HomeWork_DataSet/train_signs.h5', "r")
     train_set_x_orig = np.array(train_dataset["train_set_x"][:]) # your train set features
     train_set_y_orig = np.array(train_dataset["train_set_y"][:]) # your train set labels
 
-    test_dataset = h5py.File('test_signs.h5', "r")
+    test_dataset = h5py.File('C4_W1_HomeWork_DataSet/test_signs.h5', "r")
     test_set_x_orig = np.array(test_dataset["test_set_x"][:]) # your test set features
     test_set_y_orig = np.array(test_dataset["test_set_y"][:]) # your test set labels
 
