@@ -29,8 +29,8 @@ print(Y_train_orig.shape)
 print(X_test_orig.shape)
 print(classes)
 
-#根据shape输出可以得到训练集是1000个 64*64*3的图片，对应标签是数字
-#显示几张图片查看
+# 根据shape输出可以得到训练集是1000个 64*64*3的图片，对应标签是数字
+# 显示几张图片查看
 # index = 4
 # for i in range(index):
 #     plt.subplot(2, 2, i+1)
@@ -68,7 +68,7 @@ def create_placeholders(n_H0, n_W0, n_C0, n_y):
     """
     #用None来预先不给定参数，方便之后使用mini_batch
     #给训练参数构建占位符
-    X = tf.placeholder(tf.float32,(None,n_H0,n_W0,n_C0))
+    X = tf.placeholder(tf.float32,(None,n_H0,n_W0,n_C0),name = 'Pre_X')
     #给输出Y构建占位符
     Y = tf.placeholder(tf.float32,(None,n_y))
     
@@ -259,7 +259,7 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
         plt.show()
 
         # Calculate the correct predictions
-        predict_op = tf.argmax(Z3, 1)
+        predict_op = tf.argmax(Z3, 1,name = "Pre_Y")
         correct_prediction = tf.equal(predict_op, tf.argmax(Y, 1))
         
         # Calculate accuracy on the test set
@@ -269,6 +269,8 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
         test_accuracy = accuracy.eval({X: X_test, Y: Y_test})
         print("Train Accuracy:", train_accuracy)
         print("Test Accuracy:", test_accuracy)
+        
+        tf.train.Saver().save(sess, r"C4_W1_HomeWork_DataSet/model.ckpt")
                 
     return train_accuracy, test_accuracy, parameters
 
@@ -276,38 +278,37 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
 _, _, parameters = model(X_train, Y_train, X_test, Y_test)    
 
 
-# #%%
-# print(parameters)
+#%%
 
 
-# #%%使用上述模型返回的参数来进行提供图片识别
-# image = cv2.imread(r'C4_W1_HomeWork_DataSet/thumbs_up.jpg')
-# image = cv2.resize(image,(64,64), interpolation=cv2.INTER_AREA)
-# image = image/255.
-# image = np.expand_dims(image ,axis = 0)
+#%%使用上述模型返回的参数来进行提供图片识别
+image = cv2.imread(r'C4_W1_HomeWork_DataSet/three.jpg') 
+#如果不加如下两行 数据会发蓝
+b,g,r = cv2.split(image) 
+image = cv2.merge([r,g,b])
+plt.imshow(image)
+image = cv2.resize(image,(64,64), interpolation=cv2.INTER_AREA)
+image = image/255.
+image = np.expand_dims(image ,axis = 0)
 
-# x = tf.placeholder(dtype = tf.float32,shape = (1,64,64,3))
-# print(image.shape)
 
-# W1 = tf.convert_to_tensor(parameters["W1"])
-# W2 = tf.convert_to_tensor(parameters["W2"])
-# print(W1)
-# print(W2)
+tf.reset_default_graph()
 
-# #%%
 
-# params = {"W1": W1,
-#           "W2": W2}
-
-# Z3  = forward_propagation(x, params)
-# a = tf.argmax(Z3)
-
-# with tf.Session() as sess:
-#     prediction = sess.run(a, feed_dict = {x: image})
+with tf.Session() as sess:
+    saver = tf.train.import_meta_graph(r'C4_W1_HomeWork_DataSet/model.ckpt.meta')
+    saver.restore(sess,tf.train.latest_checkpoint(r'C4_W1_HomeWork_DataSet/'))
     
-# print(prediction)
+    graph = tf.get_default_graph()
+    x = graph.get_tensor_by_name("Pre_X:0")
+    pre_op = graph.get_tensor_by_name("Pre_Y:0")
+    
+    
+    prediction = sess.run(pre_op, feed_dict = {x: image})
+    
+print(prediction)
 
-#Test failed! 可能需要后续的学习才能明白如何在tf1.x中测试自己的图像
+# Test OK! 可以自由使用保存的模型来进行预测
 
     
     
