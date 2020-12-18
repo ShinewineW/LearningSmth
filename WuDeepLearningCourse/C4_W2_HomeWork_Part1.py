@@ -29,7 +29,7 @@ from keras.utils.vis_utils import model_to_dot
 from keras.utils import plot_model
 from keras.initializers import glorot_uniform
 
-from C4_W2_HomeWork_DataSet.resnets_utils import *
+from C4_W2_HomeWork_Part1_DataSet.resnets_utils import *
 from IPython.display import SVG
 from matplotlib.pyplot import imshow
 
@@ -336,7 +336,7 @@ print ("Test Accuracy = " + str(preds[1]))
 #测试自己的图片
 
 
-image = cv2.imread(r'C4_W2_HomeWork_DataSet/test_images/my_three2_cut.jpg') 
+image = cv2.imread(r'C4_W2_HomeWork_Part1_DataSet/test_images/one.jpg') 
 #如果不加如下两行 数据会发蓝
 b,g,r = cv2.split(image) 
 image = cv2.merge([r,g,b])
