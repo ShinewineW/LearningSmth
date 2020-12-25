@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec 24 16:55:14 2020
-
+@Discription: 本代码讲解了keras高级api接口，使用接口拼接出来的模型model，自带model特性，实例化这些类就可以
+非常方便的实现整个网络的训练过程
 @author: Administrator
 """
-import keras as K
+import tensorflow.keras as K
 #%%介绍Keras下的 Metrics
 #最典型的使用 就是 'accuracy' 这个参数，可以i自动实现分类问题的准确率判定
 
@@ -29,6 +30,8 @@ loss_meter = K.Metrics.Mean()
 #Fit   将数据通过batchsize喂入模型 同时还可以指定traning中间穿插的验证集，来一边训练一边验证模型质量
 #Evaluate 通过测试功能来进行测试 这个代码是在模型全部训练完成后，进行一次测试
 #Predict 通过预测功能来进行最终模型的预测
+
+
 
 
 
