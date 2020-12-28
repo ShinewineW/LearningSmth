@@ -103,6 +103,11 @@ load_weights_from_FaceNet(FRmodel)
 #将每个人的coding录入数据库
 database = {}
 database["danielle"] = img_to_encoding(r"C4_W4_HomeWork_Part1_DataSet/images/danielle.png", FRmodel)
+#%%
+print(database["danielle"].shape)
+
+
+#%%
 database["younes"] = img_to_encoding(r"C4_W4_HomeWork_Part1_DataSet/images/younes.jpg", FRmodel)
 database["tian"] = img_to_encoding(r"C4_W4_HomeWork_Part1_DataSet/images/tian.jpg", FRmodel)
 database["andrew"] = img_to_encoding(r"C4_W4_HomeWork_Part1_DataSet/images/andrew.jpg", FRmodel)

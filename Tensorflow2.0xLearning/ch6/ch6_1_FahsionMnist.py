@@ -111,7 +111,27 @@ for epoch in range(5):
     
     
 #%%
-            
+import cv2
+import numpy as np
+image = cv2.imread(r"C:\Users\Administrator\Desktop\MyGit\test1.jpg",0)
+image = cv2.resize(image ,(28,28),interpolation = cv2.INTER_AREA)
+image = np.around(np.transpose(image, (2,0,1))/255.0, decimals=12)
+input_test = np.array([image])
+# input_test = input_test.reshape(-1,28,28)
+print(input_test.shape)
+
+# plt.imshow(image)
+# test1 = []
+# test = tf.constant(1,shape = (1,1),dtype = tf.int32)
+# test1.append(input_test)
+# test1.append(test)
+# print(test.shape)
+# print(model.predict_on_batch(input_test,test))
+
+
+#%%
+
+         
 
 
 
