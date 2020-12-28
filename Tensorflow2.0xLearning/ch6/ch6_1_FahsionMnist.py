@@ -111,29 +111,36 @@ for epoch in range(5):
     
     
 #%%
-            
+print(x.shape)
+print(y.shape)         
+x1 = x[0,:]
+x1 = tf.expand_dims(x1,axis = 0)
+print(x1.shape)
+print(model.predict(x1))
+
+#%%
+import cv2
+import numpy as np
+image = cv2.imread(r"C:\Users\Administrator\Desktop\MyGit\test1.jpg",0)
+image = cv2.resize(image ,(28,28),interpolation = cv2.INTER_AREA)
+image = image/255.
+input_test = np.array([image])
+# input_test = input_test.reshape(-1,28,28)
+input_test = np.expand_dims(input_test, 0)
+input_test = input_test.reshape(-1,28*28)
+print(input_test.shape)
 
 
+# plt.imshow(image)
+# test1 = []
+# test = tf.constant(1,shape = (1,1),dtype = tf.int32)
+# test1.append(input_test)
+# test1.append(test)
+# print(test.shape)
+print(model.predict(input_test))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#%%
 
 
 
