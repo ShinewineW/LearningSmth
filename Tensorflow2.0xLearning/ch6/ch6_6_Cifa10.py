@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 28 16:36:35 2020
-
+@Discription:本代码通过深度神经网络实现了一个简单的cifar10数据集的分类预测任务
 @author: Administrator
 """
 
@@ -144,7 +144,7 @@ network.fit(train_db,epochs = 20,validation_data = val_db,validation_freq = 1)
 #%%模型保存
 #一般优先保存网络的权值
 network.evaluate(val_db)
-network.save_weights('ckpt_cifar10/MyDense5_weights.ckpt')
+# network.save_weights('ckpt_cifar10/MyDense5_weights.ckpt')
 
 #%%
 #新建一个一模一样结构的网络，从保存的ckpt中导入权重
