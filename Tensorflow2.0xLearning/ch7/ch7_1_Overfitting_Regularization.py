@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec 31 14:41:43 2020
-
+@Discription: 正则化的本质就是在loss最后增加一个只和参数有关的惩罚项
+在某些优化器中我们称之为 weight decay 权重衰减
+也可以在具体的代码中实现，就是抽出trainableparameters中的所有权重，并求他们的二范数
+然后乘上lamda放入loss中
 @author: Administrator
 """
 
