@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-#
 # -------------------------------------------------------------------------------
 # Name:         ch9_RNNcell
-# Description:  
+# Description:  本代码讲解了关于RNNcell的操作，以及多层RNN的操作。
 # Author:       Administrator
 # Date:         2021/1/8
 # -------------------------------------------------------------------------------
@@ -46,6 +46,38 @@ print(out.shape)
 print(ht1[0].shape)
 
 print(id(out),id(ht1[0]))
+# 观察输出可以发现此处的两个id是一样的，这是因为对于最简单的RNN，输出的out 和传递给下一层的 ht 是完全一致的东西
+##
+# 如何构建一个多层的RNN网络。也就是类似于积木堆叠，将输出不断往上堆叠
+Multi_RNNCell_Layer1 = layers.SimpleRNNCell(64)
+Multi_RNNCell_Layer2 = layers.SimpleRNNCell(32)
+
+state0_Layer1 = [tf.zeros([4,64])]
+state0_Layer2 = [tf.zeros([4,32])]
+
+out0_Layer1,state0_Layer1 = Multi_RNNCell_Layer1(xt0,state0_Layer1)
+out0_Layer2,state0_Layer2 = Multi_RNNCell_Layer2(out0_Layer1,state0_Layer2)
+
+# for element_out in out0_Layer2:
+#     print(element_out.shape)
+print(out0_Layer2.shape)  # 再次重申 只有状态输出是个列表，而out是单独的一个tensor
+for element_state in state0_Layer2:
+    print(element_state.shape)
+
+
+##
+# 如果不追求每一个Cell的细节，我们可以直接使用keras中存在的layer来直接搭积木 而不需要自己手动循环从0到句子词上限
+RNN_Model = keras.Sequential([
+    layers.SimpleRNN(128,dropout=0.5,return_sequences=True,unroll=True),
+    layers.SimpleRNN(32,dropout=0.5,unroll=True)
+]
+)
+RNN_Model.build(input_shape=(4,80,100))
+X = tf.random.normal(shape=(4,80,100))
+Y = RNN_Model(X)
+RNN_Model.summary()
+
+print(Y.shape)
 
 ##
 
