@@ -3,6 +3,8 @@
 # Name:         C5_W3_HomeWork_Part1
 # Description:  完成一个注意力模型，来进行文本的翻译
 #               使用了两个不同的模型结构
+#               2021年1月15日修正 原始结构由于s_prev并没有更新，导致结果完全是错误的
+#               更新模型后  0.005 训练50epoch后 可以查看到比较好的结果
 # Author:       Administrator
 # Date:         2021/1/14
 # -------------------------------------------------------------------------------
@@ -150,6 +152,7 @@ n_s = 64
 post_activation_LSTM_cell = LSTM(n_s, return_state = True)
 output_layer = Dense(len(machine_vocab), activation=softmax)
 
+
 # 下面开始构建model
 # 如下model是直接使用lstm返回sequence 也可以训练 并进行预测
 def model(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size):
@@ -168,12 +171,32 @@ def model(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size):
     inputs = Input(shape=(Tx,human_vocab_size))
     LSTM_Input_Bi = Bidirectional(LSTM(n_a,return_sequences= True))(inputs)
     s_prev = Input(shape=(n_s,), name='s0')
+    c_prev = Input(shape=(n_s,), name='c0')
+    s = s_prev
+    c = c_prev
     Context_list = []
     for i in range(Ty):
-        Context_list.append(one_step_attention(LSTM_Input_Bi,s_prev))
+        # Context_list.append(one_step_attention(LSTM_Input_Bi,s_prev))
+        # Fixing bugs！ 这里出现问题，可以注意到这里 s_prev是没有任何变化的，也就意味着每一次预测都是s0在输入
+        # 而不是原有网络的 St-1输入！
+
+        #2021年1月15日做出修正 将 LSTM纳入循环中进行遍历
+        Context = one_step_attention(LSTM_Input_Bi,s)
+        # print(Context.shape)
+        # (?, 1, 64)
+        # 注意这里是结果 所以只剩下 batchsize, units 中间的1 消失不见了
+        s,_,c = post_activation_LSTM_cell(Context,initial_state=[s,c])
+        # (?, 64)
+        Final_Denseinput = tf.expand_dims(s,axis= 1)
+        Context_list.append(Final_Denseinput)
+
+    # print(len(Context_list))
+    # print(Context_list[0].shape)
+    # (?, 64)
     Attention_layer = Concatenate(axis= 1)(Context_list)
-    LSTM_Output = LSTM(n_s,return_sequences= True)(Attention_layer)
-    Dense_Output = Dense(machine_vocab_size)(LSTM_Output)
+    # print(Attention_layer.shape)
+    Dense_Output = Dense(machine_vocab_size)(Attention_layer)
+    # print(Dense_Output.shape)
     Output_total = Softmax(axis= -1)(Dense_Output)
     # Output = tf.unstack(Output_total,axis = 1)
     # print(len(Output))
@@ -181,7 +204,7 @@ def model(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size):
     # for itr in Output:
     #     print(itr.shape)
 
-    Attention_Model = Model(inputs = [inputs,s_prev],outputs = Output_total)
+    Attention_Model = Model(inputs = [inputs,s_prev,c_prev],outputs = Output_total)
 
     return Attention_Model
 
@@ -238,13 +261,15 @@ def modelWu(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size):
 
     return model
 
-# model = model(Tx, Ty, n_a, n_s, len(human_vocab), len(machine_vocab))
+model = model(Tx, Ty, n_a, n_s, len(human_vocab), len(machine_vocab))
 # model.summary()
 
 # X_test = tf.ones(shape= [4,30,37])
 # s0 = np.zeros((4, n_s))
-# Y_test = model.predict([X_test,s0],steps= 1)
-#
+# c0 = np.zeros((4, n_s))
+# Y_test = model.predict([X_test,s0,c0],steps= 1)
+# print(Y_test.shape)
+
 # outputs = list(Yoh.swapaxes(0,1))
 # test = np.array(outputs)
 # print(test.shape)
@@ -252,15 +277,19 @@ def modelWu(Tx, Ty, n_a, n_s, human_vocab_size, machine_vocab_size):
 
 s0 = np.zeros((m, n_s))
 c0 = np.zeros((m, n_s))
-#
-# opt = Adam(lr=0.0005, beta_1=0.9, beta_2=0.999, decay=0.01)
+# #
+# opt = Adam(lr=0.005, beta_1=0.9, beta_2=0.999, decay=0.01)
 # model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 #
 #
-# model.fit([Xoh, s0], Yoh, epochs=50, batch_size=100)
+# model.fit([Xoh, s0,c0], Yoh, epochs=50, batch_size=100)
 
 # 在25个epochs后可以达到  62左右的准确率
 # 使用 0.005 的学习率 学习25个epoch 出现过拟合
+# 以上是模型结构错误的结果！！！   因为错误的没有更新s0导致  重新训练全新结果
+# 修改成正确模型后
+# 学习率 0.005 epoch 25 之后 效果就很好了
+# 学习率 0.005 epoch 50 之后 效果差不多 可以接受
 # 完成构建 但是由于课程中 使用的是cell 来循环构建最终输出，因此参数的调用也会完全不一样
 # 具体可以查看中的输出
 # 格式输出都是正确的  但是远达不到吴恩达所给模型的权重水准
@@ -271,7 +300,7 @@ def test_Senquence_Model():
     for example in EXAMPLES:
         source = string_to_int(example, Tx, human_vocab)
         source = np.array(list(map(lambda x: to_categorical(x, num_classes=len(human_vocab)), source)))
-        prediction = model.predict([[source], s0])
+        prediction = model.predict([[source], s0,c0])
         prediction = np.squeeze(prediction)
         prediction = np.argmax(prediction, axis=-1)  # shape (ty,1)
         prediction = np.squeeze(prediction)
@@ -293,12 +322,13 @@ def test_Wu_Model():
         print("source:", example)
         print("output:", ''.join(output))
 
-model1 = modelWu(Tx, Ty, n_a, n_s, len(human_vocab), len(machine_vocab))
-model1.summary()
-model2 = model(Tx, Ty, n_a, n_s, len(human_vocab), len(machine_vocab))
-model2.summary()
-# model1.load_weights(r'C5_W3_HomeWork_Part1_DataSet/models/model.h5')
+# model1 = modelWu(Tx, Ty, n_a, n_s, len(human_vocab), len(machine_vocab))
+# model1.summary()
+# model2 = model(Tx, Ty, n_a, n_s, len(human_vocab), len(machine_vocab))
+# model2.summary()
+model.load_weights(r'C5_W3_HomeWork_Part1_DataSet/models/model.h5')
 # test_Wu_Model()
+test_Senquence_Model()
 # 关于可视化注意力值 由于在模型搭建过程中使用了 name = ‘attention_weights’
 # attention_map = plot_attention_map(model, human_vocab, inv_machine_vocab, "Tuesday 09 Oct 1993", num = 7, n_s = 64)
 
