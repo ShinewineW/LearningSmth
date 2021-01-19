@@ -3,8 +3,9 @@
 Created on Wed Nov 18 16:39:20 2020
 Written by Netfather
 This document is guided by Dr.Wu DeepLearning Course C1_W2_Homework_Part1
-@Discription: 本文件实现了基本的深度学习激活函数，以及L1 L2距离的计算方法
-@author: Administrator
+@Discription: 本文件实现了基本的深度学习激活函数，以及L1 L2距离的计算方法，本文件构建的函数用于Part2作业
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 #%% [1]
@@ -62,6 +63,8 @@ def image2vector(image):
     
     height , length ,channel= image.shape()
     image_vector = image.reshape(height*length*channel,1)
+    # 注意这里以及之后的一段课程，吴恩达在用numpy构建数据集时，使用的方式为(features,m),是一种特征量在前，batchsize在后的方式
+    # 一般在tensorflow和keras中，使用的方式为(batchsize,features)
     
     return image_vector
 
