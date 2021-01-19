@@ -3,7 +3,8 @@
 Created on Tue Dec 29 13:10:25 2020
 @Discription: 本视频构建了一个神经风格迁移的网络，具体的loss定义已经完全弄明白，但是关于计算图的构建
 还是需要大量的编程练习才能弄清楚如果使用tf1.x来按需构建计算图
-@author: Administrator
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import os

@@ -8,10 +8,13 @@ Learnned from C1_W2_HomeWork
 1.安装numpy matplotlib opencv h5py一共四个包
 2.将这个py文件所在目录加入到当前python的环境路径中
 3.挨个运行一边查看效果
-Enjoy!
-@Discription: 本文件实现了一个最简单的单层神经网络的实现。即直接将图片
-拍扁之后，将特征映射到输出为1的空间上
-@author: Administrator
+@Discription: 本文件实现了一个最简单的单层神经网络的实现。即直接将图片拍扁之后，将特征映射到输出为1的空间上
+                1.构建前向传播
+                2.进行反向传播
+                3.更新所有权重
+                4.进行训练和预测
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 #%% 导入所有的包 运行一遍检查是否有错误
@@ -20,7 +23,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from C1_W2_HomeWork_DataSet.lr_utils import load_dataset
 import C1_W2_HomeWork_Part1 as C1_W2_Work
-import cv2
+import cv2  #如果pycharm中报错，请在pycharm中安装 opencv_python
 
 #%% 导入数据集
 train_set_x_orig, train_set_y, test_set_x_orig, test_set_y, classes = load_dataset()
@@ -52,8 +55,8 @@ print(test_matrix.shape)
 #%%标准化数据,一般要减去numpy数组的均值，然后除以标准差
 #但是图片数据集只需要除以255即可
 
-train_matrix = train_matrix / 255
-test_matrix = test_matrix / 255
+train_matrix = train_matrix / 255.
+test_matrix = test_matrix / 255.
 
 #%% Sigmoid函数从之前文件import
 #下一步初始化权重矩阵

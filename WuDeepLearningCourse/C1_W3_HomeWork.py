@@ -2,8 +2,10 @@
 """
 Created on Fri Nov 20 14:20:32 2020
 @Discription 本文件实现了一个含有单个隐藏层，隐藏神经元数为4的神经网络的构建
+                1.使用模型对一个花瓣图形进行了简单分类。
 
-@author: Administrator
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import numpy as np
@@ -358,11 +360,11 @@ def predict(parameters, X):
 
 #%%在搭建好的模型上运行最终的结果
 # Build a model with a n_h-dimensional hidden layer
-# parameters = nn_model(X, Y, n_h = 4, num_iterations = 10000, print_cost=True)
+parameters = nn_model(X, Y, n_h = 4, num_iterations = 10000, print_cost=True)
 
-# # Plot the decision boundary
-# plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
-# plt.title("Decision Boundary for hidden layer size " + str(4))
+# Plot the decision boundary
+plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
+plt.title("Decision Boundary for hidden layer size " + str(4))
 
 
 #%%可选练习

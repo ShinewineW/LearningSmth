@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec  3 16:15:08 2020
-@Description: 使用Tensorflow1.x来实现一个含有几层的深度神经网络
-@author: Administrator
+@Description: 使用Tensorflow1.x来实现一个含有几层的深度神经网络，比较底层的实现，同时由于tf1.x已经停止更新
+                和维护，因此相对来说使用Tf2.x 或者 keras 或者 Pytorch会更加方便
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 #%%

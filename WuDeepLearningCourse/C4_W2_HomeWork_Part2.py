@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Dec 18 13:28:28 2020
-@Discription: 本次作业通过keras快速搭建了一个网络模型，免去使用tensorflow
+@Discription: 本次作业通过keras快速搭建了一个检测笑脸的卷积神经网络模型，免去使用tensorflow
 来进行训练，而是用keras封装的更高层次的函数来进行
 在训练超参数过程中发现，batchsize调节过低过高都会显著影响结果的准确性
 
-@author: Administrator
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import numpy as np

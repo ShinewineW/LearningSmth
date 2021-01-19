@@ -3,21 +3,30 @@
 Created on Tue Nov 17 14:07:35 2020
 This code is on WuDLcourse 
 Code is conducted by the video on www.bilibili.com/keyword?=深度学习_Deep_Learning_Pytorch特别制作版
-@author: Administrator
+@Discription: 本文件是吴恩达课程中C1_W2_11第11讲的内容，用于说明
+                1.为何深度学习中，要尽量避免for循环的使用
+                2.numpy中的广播规则
+                3.numpy中的向量操作
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
+#%%
+# 0.导入必要包
+import numpy as np
+import time
+import math
+
 
 #%%
 #1.Code on C1_W2_11
 #开始讲解向量化操作，如下代码例子描述了使用向量化操作的时间优势
 #在深度学习中，不论怎样都要尽量避免使用for循环代码
 
-import numpy as np
-import time
 
 a = np.random.rand(1000000)
 b = np.random.rand(1000000)
 
-#如下是向量化操作代码
+#如下是向量化操作代码实现a，b元素的点乘
 tic = time.time()
 c = np.dot(a,b)
 toc = time.time()
@@ -25,7 +34,7 @@ toc = time.time()
 print(c)
 print("The vectorized version: " + str((toc-tic)*1000) + "ms")
 
-#如下是for循环操作代码
+#如下是for循环操作代码，用于实现a，b元素的点乘
 c = 0
 tic = time.time()
 for i in range(1000000):
@@ -39,13 +48,9 @@ print("The For loop version: " + str((toc-tic)*1000) + "ms")
 #2.Code on C1_W2_12
 #如下代码比较对一列向量取指数的操作
 
-import numpy as np
-import time
-import math
-
 a = np.random.rand(1000000).reshape(1000000,1)
 
-#如下是for循环代码
+#如下是for循环代码，实现向量指数操作
 tic = time.time()
 for i in range(1000000):
     if (i % 100000 == 0): 
@@ -54,7 +59,7 @@ for i in range(1000000):
 toc = time.time()
 print("The For loop version: " + str((toc-tic)*1000) + "ms")
 
-#如下是向量化代码
+#如下是向量化代码，实现向量每个元素的指数操作
 tic = time.time()
 a = np.exp(a)
 toc = time.time()
@@ -64,7 +69,8 @@ print("The vectorized version: " + str((toc-tic)*1000) + "ms")
 #%%
 #3.Code on C1_W2_15
 #这部分展示了python中numpy下的广播规则
-import numpy as np
+# broadcast是numpy中最具有特性的特征，简单表现为对于两个维度不匹配，但是在某些维度匹配的变量
+# 遵循某种规则的实现二者的运算：广播到相同维度，然后运算
 
 A = np.array([[56.0,0.0,4.4,68.0],
              [1.2,104.0,52.0,8.0],
@@ -93,7 +99,6 @@ print(B+D)
 #%%
 #4.Code on C1_W2_16
 #numpy向量操作说明
-import numpy as np
 
 a = np.random.randn(5)
 print(a,a.shape)

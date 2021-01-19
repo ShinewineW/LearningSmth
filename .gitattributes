@@ -1,1 +1,5 @@
 WuDeepLearningCourse/C4_W4_HomeWork_Part2_DataSet/pretrained-model/imagenet-vgg-verydeep-19.mat filter=lfs diff=lfs merge=lfs -text
+WuDeepLearningCourse/C5_W2_HomeWork_Part1_DataSet/data/glove.6B.50d.txt filter=lfs diff=lfs merge=lfs -text
+WuDeepLearningCourse/C5_W3_HomeWork_Part2_DataSet/XY_dev/X_dev.npy filter=lfs diff=lfs merge=lfs -text
+WuDeepLearningCourse/C5_W3_HomeWork_Part2_DataSet/XY_train/X.npy filter=lfs diff=lfs merge=lfs -text
+WuDeepLearningCourse/C4_W2_HomeWork_Part1_DataSet/signs_resnet50.h5 filter=lfs diff=lfs merge=lfs -text
