@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Nov 25 12:51:57 2020
-@Discription: 这里构建了一个L层的深度神经网络，这是从最底层实现的深度神经网络
-@author: Administrator
+@Discription: 这里使用Part1作业中构建的L层深度神经网络来对 猫分类器 进行训练
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 import time
 import numpy as np
@@ -10,8 +11,7 @@ import h5py
 import matplotlib.pyplot as plt
 import cv2
 
-from C1_W4_HomeWork_DataSet.dnn_app_utils_v2 import load_data
-from C1_W4_HomeWork_Part1 import *
+from C1_W4_HomeWork_DataSet.dnn_app_utils_v2 import *
 
 plt.rcParams['figure.figsize'] = (5.0, 4.0) # set default size of plots
 plt.rcParams['image.interpolation'] = 'nearest'
@@ -146,9 +146,9 @@ def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 
 parameters = two_layer_model(train_x, train_y, layers_dims = (n_x, n_h, n_y), num_iterations = 2500, print_cost=True)
 
 #%%
-#predictions_train = predict(train_x, train_y, parameters)
+# predictions_train = predict(train_x, train_y, parameters)
 
-#predictions_test = predict(test_x, test_y, parameters)
+# predictions_test = predict(test_x, test_y, parameters)
 
 #%%
 

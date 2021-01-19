@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Dec  2 12:57:42 2020
-@Discription:这里代码实现了Minibatch的训练方法，以及不同种类的优化函数 有最基础的随机梯度下降，Momentum梯度，Adam梯度
-@author: Administrator
+@Discription:这里代码实现了Minibatch的训练方法，以及不同种类的优化器 有最基础的随机梯度下降，Momentum梯度，Adam梯度
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import numpy as np

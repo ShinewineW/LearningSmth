@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 28 14:42:46 2020
-@Disrcription: 本作业实现了一个很简单的脸部识别代码。通过加载已经训练好的Xception模型
-#来返回一个人脸的准确信息。
-@author: Administrator
+@Disrcription: 本作业实现了一个很简单的脸部识别代码。其中loss是按照三元损失函数来定义，进行模型的训练
+通过加载已经训练好的Xception模型
+#来返回一个人脸的准确信息。一个128维度的特征向量
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 from tensorflow import keras

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 27 14:14:02 2020
-@Discription:Part1作业详细阐述了不同初始化方法带来的训练结果巨大差异，使用Xavier方法改进而来的He方法拥有最好的效果
-@author: Administrator
+@Discription:本作业详细阐述了不同初始化方法带来的训练结果巨大差异，使用Xavier方法改进而来的He方法拥有最好的效果
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import numpy as np

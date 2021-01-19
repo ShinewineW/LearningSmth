@@ -31,16 +31,16 @@ def load_raw_audio():
     activates = []
     backgrounds = []
     negatives = []
-    for filename in os.listdir("./raw_data/activates"):
+    for filename in os.listdir(r"C5_W3_HomeWork_Part2_DataSet/raw_data/activates"):
         if filename.endswith("wav"):
-            activate = AudioSegment.from_wav("./raw_data/activates/"+filename)
+            activate = AudioSegment.from_wav(r"C5_W3_HomeWork_Part2_DataSet/raw_data/activates/"+filename)
             activates.append(activate)
-    for filename in os.listdir("./raw_data/backgrounds"):
+    for filename in os.listdir(r"C5_W3_HomeWork_Part2_DataSet/raw_data/backgrounds"):
         if filename.endswith("wav"):
-            background = AudioSegment.from_wav("./raw_data/backgrounds/"+filename)
+            background = AudioSegment.from_wav(r"C5_W3_HomeWork_Part2_DataSet/raw_data/backgrounds/"+filename)
             backgrounds.append(background)
-    for filename in os.listdir("./raw_data/negatives"):
+    for filename in os.listdir(r"C5_W3_HomeWork_Part2_DataSet/raw_data/negatives"):
         if filename.endswith("wav"):
-            negative = AudioSegment.from_wav("./raw_data/negatives/"+filename)
+            negative = AudioSegment.from_wav(r"C5_W3_HomeWork_Part2_DataSet/raw_data/negatives/"+filename)
             negatives.append(negative)
     return activates, negatives, backgrounds
