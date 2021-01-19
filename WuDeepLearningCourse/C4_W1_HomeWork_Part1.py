@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Dec 11 13:11:59 2020
-@Discription:本次作业只用numpy构建了卷积和池化操作，并实现了这两个操作的反向传播
-其中正向操作比较简单，反向传播非常复杂，但是由于卷积本质上为乘法和加法，因此我们
-站在后向传递上来的张量上，每个点每个点的将dZ分配到原来的输入上去
-池化本质上是对梯度的分配操作，因此我们站在后向传递上来的张量上，按照既定的模式，或
-按照最大值，或按照平均来将dA分配到原来的输入上去
-@author: Administrator
+@Discription:本次作业只用numpy构建了卷积和池化操作，并实现了这两个操作的反向传播。其中正向操作比较简单，反向传播非常复杂，
+但是由于卷积本质上为乘法和加法，因此我们站在后向传递上来的张量上，每个点每个点的将dZ分配到原来的输入上去
+池化本质上是对梯度的分配操作，因此我们站在后向传递上来的张量上，按照既定的模式，或按照最大值，或按照平均来将dA分配到原来的输入上去
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import numpy as np
@@ -280,7 +279,7 @@ def conv_backward(dZ, cache):
                     horiz_start = k*stride
                     horiz_end = horiz_start + f
                     dA_prev_pad[i,horiz_start:horiz_end,vert_start:vert_end,:] += W[:,:,:,j] * dZ[i, k, n, j]
-                    #那么dW 就是站在dz的角度对所有参数中A_prev进行计算
+                    #那么dW 就是站在dz的角度对所有参数中A_prev进行累加求和计算
                     dW[:,:,:,j] += A_prev_pad[i,horiz_start:horiz_end,vert_start:vert_end,:] * dZ[i, k, n, j]
                     db[:,:,:,j] += dZ[i, k, n, j]
         dA_prev[i, :, :, :] = dA_prev_pad[i, pad:-pad, pad:-pad, :]
