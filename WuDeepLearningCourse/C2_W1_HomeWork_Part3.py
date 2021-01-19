@@ -2,7 +2,10 @@
 """
 Created on Sat Nov 28 14:15:15 2020
 @Discription:这里实现了梯度检查的部分例子
-@author: Administrator
+                对于某些自行编写网络，我们需要确认反向传播算法是正确的，这个方法也可以适用于tf，keras等模型
+                原理：即我们在目标函数J(x)左右各取等长的一小段i 那么J(x)在x的导数应该近似等于 (J(x+i) + J(x-i)) / 2
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import numpy as np
