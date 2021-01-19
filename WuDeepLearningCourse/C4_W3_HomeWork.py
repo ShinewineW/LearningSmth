@@ -2,12 +2,14 @@
 """
 Created on Thu Dec 24 13:18:34 2020
 @本代码实现了yolo网络输出的后端处理，能够通过阈值判定和非极大值抑制输出目标检测的方框
+本代码中一共执行了三个步骤，首先导入训练好的yolo网络，然后将网络的输出拼接到分解为有含义的张量上，最后对张量进行处理得到所需要的方框
 如果要对自己的图片进行标注请遵循如下步骤
-修改  image_shape = (1080., 1920.)    中的图片像素分辨率，这个修改关系到输出判定边界的scale，不修改会导致判定盒不匹配
+修改   image_shape = (1080., 1920.)    中的图片像素分辨率，这个修改关系到输出判定边界的scale，不修改会导致判定盒不匹配
 修改   image.save(r"C4_W3_HomeWork_DataSet/out/mytest2.jpg", quality=90)
 修改   redict(sess, r"C4_W3_HomeWork_DataSet/images/mytest2.jpg") 路径地址
 
-@author: Administrator
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import argparse
@@ -264,11 +266,13 @@ sess = K.get_session()
 
 class_names = read_classes(r"C4_W3_HomeWork_DataSet/model_data/coco_classes.txt")
 anchors = read_anchors(r"C4_W3_HomeWork_DataSet/model_data/yolo_anchors.txt")
-image_shape = (1080., 1920.) 
+image_shape = (1080., 1920.)  
 
 
 
 yolo_model = load_model(r"C4_W3_HomeWork_DataSet/model_data/yolo.h5") 
+
+yolo_model.trainable = False # 将导入的模型冻结
 
 yolo_model.summary()
 
@@ -295,11 +299,11 @@ def predict(sess, image_file):
 
     # Preprocess your image
     image, image_data = preprocess_image( image_file, model_image_size = (608, 608))
-
+    print(image_data.shape)
     # Run the session with the correct tensors and choose the correct placeholders in the feed_dict.
     # You'll need to use feed_dict={yolo_model.input: ... , K.learning_phase(): 0})
     ### START CODE HERE ### (≈ 1 line)
-    out_scores, out_boxes, out_classes = sess.run([scores, boxes, classes],feed_dict={yolo_model.input: image_data,K.learning_phase(): 0})
+    out_scores, out_boxes, out_classes = sess.run([scores, boxes, classes],feed_dict={yolo_model.input: image_data, K.learning_phase(): 0})
     ### END CODE HERE ###
 
     # Print predictions info
