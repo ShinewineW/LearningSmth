@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Dec 14 12:38:11 2020
-@Discription: 本次作业完成了一个完全的卷积神经网络，使用tf1.x框架
-整体流程已经掌握，具体问题在于最后使用已经训练好的参数来可视化一张真实
-图片发生了问题。具体如何解决看看通过后续学习能否解决。
-@author: Administrator
+@Discription: 本次作业完成了一个完全的卷积神经网络，使用tf1.x框架，并在最后使用opencv查看最终效果
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import math
@@ -189,7 +188,7 @@ def compute_cost(Z3, Y):
 
 #4.由于后续的反向传播和参数更新，tf会自动帮我们实现，因此这里直接开始模型构建
 def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
-          num_epochs = 100, minibatch_size = 64, print_cost = True):
+          num_epochs = 50, minibatch_size = 64, print_cost = True):
     """
     Implements a three-layer ConvNet in Tensorflow:
     CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNECTED
@@ -275,7 +274,7 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate = 0.009,
     return train_accuracy, test_accuracy, parameters
 
 
-_, _, parameters = model(X_train, Y_train, X_test, Y_test)    
+# _, _, parameters = model(X_train, Y_train, X_test, Y_test)    
 
 
 #%%
@@ -283,7 +282,7 @@ _, _, parameters = model(X_train, Y_train, X_test, Y_test)
 
 #%%使用上述模型返回的参数来进行提供图片识别
 image = cv2.imread(r'C4_W1_HomeWork_DataSet/three.jpg') 
-#如果不加如下两行 数据会发蓝
+#如果不加如下两行 图片会发蓝  是因为plt和opecv中存储图像的方式不一样
 b,g,r = cv2.split(image) 
 image = cv2.merge([r,g,b])
 plt.imshow(image)
