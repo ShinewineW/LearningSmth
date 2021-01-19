@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 27 15:06:31 2020
-@Discription: 本Part2作业详细阐述了使用不同的正则化方法来使得结果更具有非线性，使得结果在最终Test模型上取得最好效果
-@author: Administrator
+@Discription: 本作业详细阐述了使用不同的正则化方法来使得结果更具有非线性，使得结果在最终Test模型上取得最好效果
+                1. 不加入任何正则项
+                2. 在loss中使用W的二范数进行正则化
+                3. 使用Dropout正则化
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import numpy as np
@@ -182,6 +186,9 @@ def backward_propagation_with_regularization(X, Y, cache, lambd):
 # print ("dW2 = "+ str(grads["dW2"]))
 # print ("dW3 = "+ str(grads["dW3"]))
 
+##
+
+
 
 # parameters = model(train_X, train_Y, lambd = 0.7)
 # print ("On the train set:")
@@ -194,6 +201,7 @@ def backward_propagation_with_regularization(X, Y, cache, lambd):
 # axes.set_xlim([-0.75,0.40])
 # axes.set_ylim([-0.75,0.65])
 # plot_decision_boundary(lambda x: predict_dec(parameters, x.T), train_X, train_Y)
+
 #Test OK！
 
 #2. 完成DroupOut正则化代码
