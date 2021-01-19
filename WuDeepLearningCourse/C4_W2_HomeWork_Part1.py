@@ -6,9 +6,11 @@ Created on Thu Dec 17 15:55:20 2020
     pip3 install keras==2.1.0
     过高的keras版本不支持tensorflow1.x
     如下代码实现了一个ResNet50的步骤，比较简化，能够在sign上实现很高的表现
-    但是似乎sign数据集的手都是手心照片 并不是手背 所以自我拍摄的图片效果很差？
+    同时放入了自我拍摄的图片用于验证：
+        但是似乎sign数据集的手都是手心照片 并不是手背 所以自我拍摄的图片效果很差？
     
-@author: Administrator
+@author: Netfather
+@Last Modified data: 2021年1月19日
 """
 
 import numpy as np
@@ -296,9 +298,10 @@ def ResNet50(input_shape = (64, 64, 3), classes = 6):
 
     return model
 
+model = ResNet50(input_shape = (64, 64, 3), classes = 6)   
+
 #%%
 
-model = ResNet50(input_shape = (64, 64, 3), classes = 6)   
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = load_dataset()
@@ -328,9 +331,9 @@ print ("Test Accuracy = " + str(preds[1]))
 #%%
 #保存模型到文件
 
-# print("Saving model to disk \n")
-# save_path = r"C4_W2_HomeWork_DataSet/signs_resnet50.h5"
-# model.save(save_path)
+print("Saving model to disk \n")
+save_path = r"C4_W2_HomeWork_Part1_DataSet/signs_resnet50.h5"
+model.save(save_path)
 
 #%%
 #测试自己的图片
