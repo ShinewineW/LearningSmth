@@ -111,10 +111,12 @@ print(TrainY.shape)
 # TestOK!
 ## 使用keras开始训练
 # 2021年1月25日留 使用密集全连接网络
+# Backup 目前最好模型
 def Mymodel():
     inputs = layers.Input(shape=(9,17))
     flatten = layers.Flatten()(inputs)
-    x1 = layers.Dense(256,activation="relu")(flatten)
+    x1 = layers.Dense(512, activation="relu")(flatten)
+    x1 = layers.Dense(256,activation="relu")(x1)
     x2 = layers.Dense(128)(x1)
     x3 = layers.BatchNormalization()(x2)
     x4 = layers.Activation('relu')(x3)
@@ -128,27 +130,28 @@ def Mymodel():
     print(outputs.shape)
     model = keras.Model(inputs = inputs , outputs = outputs)
     return model
-# 2021年1月26日 尝试使用GRU RNN网络
 
+# 2021年1月26日 尝试使用GRU RNN网络
+# GRU 模型确实不适合 这个题目 XD
 def GRUmodel():
     inputs = Input(shape=(9,17))
     # print(Conv_1D.shape)
     # print(Conv_1D.shape)
     # 完成1D卷积之后 shape变更为(batchsize,1375((5511 - kernalsize) / stride + 1),196)
     # 将完成卷积的1维序列通过GRU
-    GRU_Senquence = GRU(64,return_sequences= True)(inputs)
+    GRU_Senquence = LSTM(128,return_sequences= True)(inputs)
     # (batchsize,9,128)
     GRU_Senquence = Dropout(0.2)(GRU_Senquence)
     GRU_Senquence = BatchNormalization()(GRU_Senquence)
 
     #再次通过GRU
-    GRU_Senquence = GRU(128)(GRU_Senquence)
+    GRU_Senquence = LSTM(256)(GRU_Senquence)
     # (batchsize,1375,128)
     GRU_Senquence = Dropout(0.2)(GRU_Senquence)
     GRU_Senquence = BatchNormalization()(GRU_Senquence)
     GRU_Senquence = Activation('relu')(GRU_Senquence)
 
-    _ = layers.Dense(64)(GRU_Senquence)
+    _ = layers.Dense(128)(GRU_Senquence)
     _ = layers.BatchNormalization()(_)
     _ = layers.Activation('relu')(_)
 
@@ -168,66 +171,16 @@ network = Mymodel()
 # test_x = tf.ones(shape=(30,9,17))
 # test_y = network.predict(test_x,steps=1)
 # print(test_y.shape)
-checkpoint_filepath = 'tmp/'
-model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-    filepath=checkpoint_filepath,
-    save_best_only= True,
-    monitor='val_logcosh',
-    mode='min')
 
-Early_Stop_callback = tf.keras.callbacks.EarlyStopping(monitor='val_logcosh', patience=20,mode='min')
+# 叠BUFF！！！
+checkpoint_filepath = 'tmp/'
+model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath,save_best_only= True,monitor='val_logcosh',mode='min',save_weights_only=True)
+# Early_Stop_callback = tf.keras.callbacks.EarlyStopping(monitor='val_logcosh', patience=15,mode='min')
+reduce_lr_loss = tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.3, patience=10, verbose=1, epsilon=1e-4, mode='min')
+
 # callbacks=[Early_Stop_callback]
-network.compile(optimizer = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999,decay= 0.001),
+network.compile(optimizer = optimizers.Adam(lr=0.004, beta_1=0.9, beta_2=0.999),
                 loss = tf.keras.losses.Huber(),
                 metrics = [tf.keras.metrics.LogCoshError()]
                 )
-network.fit(x = TrainX, y = TrainY ,epochs = 150,batch_size= 64,validation_split= 0.1, validation_freq= 1,callbacks=[model_checkpoint_callback])
-
-##
-# network = keras.models.load_model(r'./MyDense4_weights.h5')
-
-
-## 读入 test.csv
-def Testfiles():
-    testfiles = open("test.csv",mode= 'r',encoding="big5")
-    rows = 0 #用于记录读出的行数
-    features = 0 #用于记录每一天的数据
-    list_perday_test = [] #记录每一天的所有列表
-    list_allyear_test = [] #按照每一天收集所有的列表
-    while True:
-        onerow = testfiles.readline()
-        if (onerow == ''):
-            break
-        #处理意外情况
-        # Test 用
-        # if (rows >= 20):
-        #     break
-        #对每一个相同的日期
-        onelist = onerow.split(sep=',')
-        if (rows < 4319):
-            onelist[-1] = onelist[-1][0:-1] #最后一行去换行符
-        if(features == 18): #到了第18个表示一天记录完成，清空标志，并将一天的放入总list中
-            features = 0
-            list_allyear_test.append(list_perday_test.copy())
-            list_perday_test.clear() #清空之前的数据
-        if(features == 10): # 第10个特征元素由于是NR，因此不记录
-            features += 1
-            rows = rows + 1
-            continue
-        templist = list(map(lambda x:float(x),onelist[2:])) #抽出feature
-        list_perday_test.append(templist)
-        features += 1
-        rows = rows + 1
-    # 最后一天数据压入
-    list_allyear_test.append(list_perday_test.copy())
-    list_perday_test.clear()  # 清空之前的数据
-    # print(list_perday)
-    # print(list_allyear)
-    Test_X_Year = np.array(list_allyear_test) #转为numpy数组
-    # print(Test_X_Year.shape)
-    testfiles.close()
-    Test_X_Year = np.transpose(Test_X_Year,axes=(0,2,1))
-    Test_Y = network.predict(Test_X_Year)
-    np.savetxt('output.csv',Test_Y,delimiter=',')
-
-# Testfiles()
+network.fit(x = TrainX, y = TrainY ,epochs = 150,batch_size= 150,validation_split= 0.1, validation_freq= 1,callbacks=[model_checkpoint_callback,reduce_lr_loss])

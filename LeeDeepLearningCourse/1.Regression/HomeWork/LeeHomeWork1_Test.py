@@ -16,7 +16,28 @@ import csv
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-network =  keras.models.load_model("tmp")
+def Mymodel():
+    inputs = layers.Input(shape=(9,17))
+    flatten = layers.Flatten()(inputs)
+    x1 = layers.Dense(512, activation="relu")(flatten)
+    x1 = layers.Dense(256,activation="relu")(x1)
+    x2 = layers.Dense(128)(x1)
+    x3 = layers.BatchNormalization()(x2)
+    x4 = layers.Activation('relu')(x3)
+    _ = layers.Dense(64)(x4)
+    _ = layers.BatchNormalization()(_)
+    _ = layers.Activation('relu')(_)
+    _ = layers.Dense(32)(_)
+    _ = layers.BatchNormalization()(_)
+    _ = layers.Activation('relu')(_)
+    outputs = layers.Dense(1)(_)  #不是分类问题 因此不使用 sigmoid
+    print(outputs.shape)
+    model = keras.Model(inputs = inputs , outputs = outputs)
+    return model
+
+
+network = Mymodel()
+network.load_weights(r'tmp/')
 
 def Testfiles():
     testfiles = open("test.csv",mode= 'r',encoding="big5")
