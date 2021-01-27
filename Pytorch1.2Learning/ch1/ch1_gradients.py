@@ -6,6 +6,7 @@
 # Date:         2021/1/27
 # -------------------------------------------------------------------------------
 import torch
+from torch import optim
 import torchvision
 import numpy as np
 import os
@@ -30,7 +31,7 @@ ax.set_ylabel('y')
 
 # 梯度下降
 x = torch.randn(size = [2],requires_grad= True)
-optimizer = torch.optim.Adam([x],lr = 1e-3) #设定优化器
+optimizer = optim.AdamW([x],lr = 1e-3) #设定优化器
 
 for step in range(15000):
 
