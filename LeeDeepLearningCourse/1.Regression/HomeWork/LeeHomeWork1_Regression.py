@@ -162,20 +162,26 @@ def GRUmodel():
     model = keras.Model(inputs = inputs,outputs = Dense_output)
     return model
 
-network = GRUmodel()
+network = Mymodel()
 
 # Test OK!
 # test_x = tf.ones(shape=(30,9,17))
 # test_y = network.predict(test_x,steps=1)
 # print(test_y.shape)
+checkpoint_filepath = 'tmp/'
+model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_filepath,
+    save_best_only= True,
+    monitor='val_logcosh',
+    mode='min')
 
-Early_Stop_callback = tf.keras.callbacks.EarlyStopping(monitor='val_mean_squared_error', patience=20,mode='min')
+Early_Stop_callback = tf.keras.callbacks.EarlyStopping(monitor='val_logcosh', patience=20,mode='min')
 # callbacks=[Early_Stop_callback]
-network.compile(optimizer = optimizers.Adam(lr=0.005, beta_1=0.9, beta_2=0.999,decay= 0.001),
-                loss = tf.keras.losses.MSE,
-                metrics = [metrics.mean_squared_error]
+network.compile(optimizer = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999,decay= 0.001),
+                loss = tf.keras.losses.Huber(),
+                metrics = [tf.keras.metrics.LogCoshError()]
                 )
-network.fit(x = TrainX, y = TrainY ,epochs = 120,batch_size= 64,validation_split= 0.1, validation_freq= 1)
+network.fit(x = TrainX, y = TrainY ,epochs = 150,batch_size= 64,validation_split= 0.1, validation_freq= 1,callbacks=[model_checkpoint_callback])
 
 ##
 # network = keras.models.load_model(r'./MyDense4_weights.h5')
@@ -224,4 +230,4 @@ def Testfiles():
     Test_Y = network.predict(Test_X_Year)
     np.savetxt('output.csv',Test_Y,delimiter=',')
 
-Testfiles()
+# Testfiles()
