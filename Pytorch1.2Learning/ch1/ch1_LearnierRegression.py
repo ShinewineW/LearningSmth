@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-#
 # -------------------------------------------------------------------------------
 # Name:         ch1_LearnierRegression
-# Description:  
+# Description:  大致描述了一个pytorch架构的网络训练 需要完成的步骤
 # Author:       Administrator
 # Date:         2021/1/27
 # -------------------------------------------------------------------------------
@@ -71,3 +71,4 @@ for epoch in range(epochs):
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
                        100. * batch_idx / len(train_loader), loss.item()))
+
