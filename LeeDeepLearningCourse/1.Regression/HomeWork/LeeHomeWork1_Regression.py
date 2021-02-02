@@ -173,7 +173,7 @@ network = Mymodel()
 # print(test_y.shape)
 
 # 叠BUFF！！！
-checkpoint_filepath = 'tmp/'
+checkpoint_filepath = './tmp/'
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath,save_best_only= True,monitor='val_logcosh',mode='min',save_weights_only=True)
 # Early_Stop_callback = tf.keras.callbacks.EarlyStopping(monitor='val_logcosh', patience=15,mode='min')
 reduce_lr_loss = tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.3, patience=10, verbose=1, epsilon=1e-4, mode='min')
