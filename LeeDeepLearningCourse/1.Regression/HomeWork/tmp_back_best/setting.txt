@@ -1,0 +1,11 @@
+checkpoint_filepath = 'tmp/'
+model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath,save_best_only= True,monitor='val_logcosh',mode='min',save_weights_only=True)
+# Early_Stop_callback = tf.keras.callbacks.EarlyStopping(monitor='val_logcosh', patience=15,mode='min')
+reduce_lr_loss = tf.keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.3, patience=10, verbose=1, epsilon=1e-4, mode='min')
+
+# callbacks=[Early_Stop_callback]
+network.compile(optimizer = optimizers.Adam(lr=0.004, beta_1=0.9, beta_2=0.999),
+                loss = tf.keras.losses.Huber(),
+                metrics = [tf.keras.metrics.LogCoshError()]
+                )
+network.fit(x = TrainX, y = TrainY ,epochs = 150,batch_size= 128,validation_split= 0.1, validation_freq= 1,callbacks=[model_checkpoint_callback,reduce_lr_loss])
