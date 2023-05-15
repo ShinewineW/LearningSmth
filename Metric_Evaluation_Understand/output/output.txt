@@ -1,0 +1,60 @@
+# AP and precision/recall per class
+50.00% = book AP 
+ Precision: ['1.00', '1.00', '0.67', '0.50', '0.40', '0.50', '0.43', '0.50']
+ Recall :['0.17', '0.33', '0.33', '0.33', '0.33', '0.50', '0.50', '0.67']
+
+0.00% = bookcase AP 
+ Precision: []
+ Recall :[]
+
+0.00% = coffeetable AP 
+ Precision: []
+ Recall :[]
+
+0.00% = doll AP 
+ Precision: []
+ Recall :[]
+
+0.00% = heater AP 
+ Precision: []
+ Recall :[]
+
+100.00% = pictureframe AP 
+ Precision: ['1.00']
+ Recall :['1.00']
+
+0.00% = pottedplant AP 
+ Precision: ['0.00', '0.00']
+ Recall :['0.00', '0.00']
+
+100.00% = tvmonitor AP 
+ Precision: ['1.00']
+ Recall :['1.00']
+
+0.00% = vase AP 
+ Precision: []
+ Recall :[]
+
+
+# mAP of all classes
+mAP = 27.78%
+
+# Number of ground-truth objects per class
+book: 6
+bookcase: 1
+coffeetable: 2
+doll: 1
+heater: 1
+pictureframe: 1
+pottedplant: 1
+tvmonitor: 1
+vase: 1
+
+# Number of detected objects per class
+book: 8 (tp:4, fp:4)
+bottle: 1 (tp:0, fp:1)
+chair: 1 (tp:0, fp:1)
+cup: 1 (tp:0, fp:1)
+pictureframe: 1 (tp:1, fp:0)
+pottedplant: 2 (tp:0, fp:2)
+tvmonitor: 1 (tp:1, fp:0)

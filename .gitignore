@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+# Multiple images
+images-optional_backup
+ground-truth_backup
+detection-results_backup
+
+
 # Big files
 C4_W4_HomeWork_Part2_DataSet/
 AnimeDataset.zip
