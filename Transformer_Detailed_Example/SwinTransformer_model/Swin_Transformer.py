@@ -19,7 +19,7 @@ import os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 modles_name = timm.list_models(filter="*swin*")
-
+#111
 # print(modles_name)
 
 model =  timm.models.swin_base_patch4_window7_224(pretrained= False)
