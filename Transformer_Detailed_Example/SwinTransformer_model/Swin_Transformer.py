@@ -22,7 +22,7 @@ modles_name = timm.list_models(filter="*swin*")
 
 # print(modles_name)
 
-# model =  timm.models.swin_base_patch4_window7_224
+model =  timm.models.swin_base_patch4_window7_224(pretrained= False)
 
 
 # 1. 关于相对位置索引  这里是官方的代码 我们可以查看
@@ -186,5 +186,44 @@ attn_mask = mask_windows.unsqueeze(1) - mask_windows.unsqueeze(2)  # 这一步�
 print(attn_mask.size())
 attn_mask = attn_mask.masked_fill(attn_mask != 0, float(-100.0)).masked_fill(attn_mask == 0, float(0.0))
 print(attn_mask.size())
+
+
+# 3. 检查一下 swin的 张量变化  由于 swin会经过 patch_embed  之后的维度应该改为  B,N,Dim_emb
+# 但是 后续的处理又和 开的小窗口紧密相连
+# 观察这一过程中的张量变化
+input_tensor = torch.randn(size= [7,3,224,224])
+output_tensor = model(input_tensor)
+print(output_tensor.size())
+
+# 观察如下的代码 我们可以看到  其中有一个参数叫做grid_size  定义的就是经过patch划分之后的尺寸大小
+# 然后在总的 Swin模块中  由self.patch_grid = self.patch_embed.grid_size  拿到经过patch划分之后的网格
+# 然后在每一层layer的堆叠中   input_resolution=(self.patch_grid[0] // (2 ** i), self.patch_grid[1] // (2 ** i)),
+# 由这个拿到每层输入的 resolution 变化 得解
+# 其实是在 patch 划分的基础上 将经过patch之后的图 作为一个新的输入图 来求解
+
+# class PatchEmbed(nn.Module):
+#     """ 2D Image to Patch Embedding
+#     """
+#     def __init__(
+#             self,
+#             img_size=224,
+#             patch_size=16,
+#             in_chans=3,
+#             embed_dim=768,
+#             norm_layer=None,
+#             flatten=True,
+#             bias=True,
+#     ):
+#         super().__init__()
+#         img_size = to_2tuple(img_size)
+#         patch_size = to_2tuple(patch_size)
+#         self.img_size = img_size
+#         self.patch_size = patch_size
+#         self.grid_size = (img_size[0] // patch_size[0], img_size[1] // patch_size[1])
+#         self.num_patches = self.grid_size[0] * self.grid_size[1]
+#         self.flatten = flatten
+
+#         self.proj = nn.Conv2d(in_chans, embed_dim, kernel_size=patch_size, stride=patch_size, bias=bias)
+#         self.norm = norm_layer(embed_dim) if norm_layer else nn.Identity()
 
 
