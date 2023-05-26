@@ -67,8 +67,19 @@ print(output_tensor.shape)   # torch.Size([7, 1000])
 # 图片输入模型的形状torch.Size([7, 3, 224, 224])
 # 图片经过patch_embed的形状torch.Size([7, 49, 768])
 # 位置编码之后的形状torch.Size([7, 50, 768])
+# 送入 attention 之中   
+# 输入x 直接过 qkv 联合矩阵之后的大小变为torch.Size([7, 50, 2304])  这里的 2304 是  768 的 3倍
+# 所以 本质 这个 768 不仅定义了  经过embed之后的维度 也定义了  多头 * 单头数量的维度
+# 所以这里  由于   12 * 64 = 768  因此 单头维度为64 
+# 所以 对 经过联合之后的矩阵 进行拆分 依次拆分出 QKV ([3, 7, 12, 50, 64])   QKV_Num , Batch_size , Multi_head , Sequ_len , Signle_head
+# 然后解绑  变成 Batch_size, Multi_head, Sequ_len, Single_head的形式   torch.Size([7, 12, 50, 64])
+# 也就是说在做 transformer的时候 中间的 multi_head 是单独摘出来的
+
+
+
 # torch.Size([7, 1000])
 
 # 通过上面的测试输出 我们可以非常明显的知道   cls_token是全0初始化  pos_embed 不需要额外的公式维护 而是模型自己学习的一个变量。
-
+# 再来深入考察一下 qkv 矩阵的变化
+# 
 
