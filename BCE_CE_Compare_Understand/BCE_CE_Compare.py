@@ -123,6 +123,7 @@ def check_CE_losses_run():
     # 这里我们使用额外的函数将 one-hot编码的  B,C,H,W
     # 转换为  B,H,W 的  填写数字范围为  [0,2] 的数字  其中0表示背景 为第一个类别
     cross_entropy_labels = torch.argmax(label, dim=1)
+    print(cross_entropy_labels)
     print(cross_entropy_labels.size())  # 当时这种方法 并不能判断 背景和 0分类的区别  
     # 所以 背景类 依然需要单独 在第一个维度列出来 因此这里的  0 表示的就是背景 1表示第一类 2 表示第二类
     # 总共是3分类问题  我们可以使用 one_hot 将 整数类型的 结果还原得到
@@ -229,8 +230,8 @@ def check_BCE_losses_run():
 
 def main():
     # check_BCE_losses_run()
-    # check_CE_losses_run()
-    combine_CE_BCE_losses_run()
+    check_CE_losses_run()
+    # combine_CE_BCE_losses_run()
 
 
 if __name__ == '__main__':
